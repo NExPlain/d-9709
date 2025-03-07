@@ -1,12 +1,9 @@
-
 import { ImageGenerator } from "@/components/ImageGenerator";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 p-6 md:p-8">
+  return <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center space-y-3">
-          <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent md:text-7xl">
             AI Image Generator
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -18,8 +15,6 @@ const Index = () => {
           <p>Powered by Replicate's API and your imagination</p>
         </footer>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
