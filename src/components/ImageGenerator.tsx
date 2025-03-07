@@ -1,11 +1,13 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useApiKey } from '@/hooks/useApiKey';
-import { generateImage, checkGenerationStatus, type GenerationResponse } from '@/lib/replicate';
-import { Loader2 } from 'lucide-react';
+import { generateImage, checkGenerationStatus } from '@/lib/replicate';
+import { Loader2, Wand2, Key, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
 
 export const ImageGenerator = () => {
   const [prompt, setPrompt] = useState('');
@@ -46,85 +48,112 @@ export const ImageGenerator = () => {
       }, 1000);
     } catch (error) {
       setIsGenerating(false);
+      toast.error('An error occurred while generating the image');
     }
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto space-y-8">
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="apiKey" className="block text-sm font-medium">
-            Replicate API Key
-          </label>
-          <Input
-            id="apiKey"
-            type="password"
-            value={apiKey}
-            onChange={(e) => updateApiKey(e.target.value)}
-            placeholder="Enter your API key"
-            className="w-full"
-          />
-          <p className="text-sm text-muted-foreground">
-            Get your API key from{' '}
-            <a
-              href="https://replicate.com/account/api-tokens"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline hover:no-underline"
-            >
-              Replicate API Tokens
-            </a>
-          </p>
-        </div>
+      <Card className="overflow-hidden border-2 bg-gradient-to-br from-card to-secondary/80 backdrop-blur-sm shadow-lg">
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Key className="h-4 w-4 text-primary/80" />
+                <Label htmlFor="apiKey" className="text-sm font-medium">
+                  Replicate API Key
+                </Label>
+              </div>
+              <Input
+                id="apiKey"
+                type="password"
+                value={apiKey}
+                onChange={(e) => updateApiKey(e.target.value)}
+                placeholder="Enter your API key"
+                className="w-full transition-all focus:ring-2 focus:ring-primary/30"
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                Get your API key from{' '}
+                <a
+                  href="https://replicate.com/account/api-tokens"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline hover:no-underline font-medium transition-all"
+                >
+                  Replicate API Tokens
+                </a>
+              </p>
+            </div>
 
-        <div className="space-y-2">
-          <label htmlFor="prompt" className="block text-sm font-medium">
-            Prompt
-          </label>
-          <div className="flex gap-2">
-            <Input
-              id="prompt"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt"
-              className="flex-1"
-              disabled={isGenerating}
-            />
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt || !apiKey}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                'Generate'
-              )}
-            </Button>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Wand2 className="h-4 w-4 text-primary/80" />
+                <Label htmlFor="prompt" className="text-sm font-medium">
+                  What would you like to create?
+                </Label>
+              </div>
+              <div className="flex gap-3">
+                <Input
+                  id="prompt"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Enter your prompt here (e.g., 'A serene lake with mountains in the background')"
+                  className="flex-1 transition-all focus:ring-2 focus:ring-primary/30"
+                  disabled={isGenerating}
+                />
+                <Button
+                  onClick={handleGenerate}
+                  disabled={isGenerating || !prompt || !apiKey}
+                  className="transition-all"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="mr-2 h-4 w-4" />
+                      Generate
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="relative min-h-[300px] w-full">
+      <div className="relative min-h-[400px] w-full rounded-lg overflow-hidden">
         {isGenerating ? (
-          <Card className="absolute inset-0 flex items-center justify-center bg-muted/50">
-            <div className="text-center space-y-4">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-              <p className="text-sm animate-pulse-slow">Generating your image...</p>
+          <Card className="absolute inset-0 flex items-center justify-center bg-muted/50 border-0 animate-pulse">
+            <div className="text-center space-y-4 p-6">
+              <div className="w-16 h-16 rounded-full bg-background flex items-center justify-center mx-auto shadow-lg">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+              <p className="text-lg font-medium animate-pulse-slow">Creating your masterpiece...</p>
+              <p className="text-sm text-muted-foreground max-w-md">
+                This usually takes 10-20 seconds depending on complexity
+              </p>
             </div>
           </Card>
         ) : generatedImage ? (
-          <img
-            src={generatedImage}
-            alt="Generated image"
-            className="w-full h-auto rounded-lg shadow-lg"
-          />
+          <div className="overflow-hidden rounded-lg shadow-lg transition-all hover:shadow-xl border-2 border-card">
+            <img
+              src={generatedImage}
+              alt="Generated image"
+              className="w-full h-auto object-cover transition-all hover:scale-[1.02] duration-500"
+              loading="lazy"
+            />
+          </div>
         ) : (
-          <Card className="absolute inset-0 flex items-center justify-center bg-muted/50">
-            <p className="text-muted-foreground">
-              Your generated image will appear here
+          <Card className="absolute inset-0 flex flex-col items-center justify-center bg-muted/30 border-2 border-dashed">
+            <ImageIcon className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground text-lg font-medium">
+              Your created image will appear here
+            </p>
+            <p className="text-muted-foreground/70 text-sm max-w-md text-center mt-2">
+              Create something amazing with the power of AI
             </p>
           </Card>
         )}
