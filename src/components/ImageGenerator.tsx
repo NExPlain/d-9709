@@ -55,12 +55,12 @@ export const ImageGenerator = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Key className="h-4 w-4 text-primary/80" />
-                <Label htmlFor="apiKey" className="text-sm font-medium">
+                <Label htmlFor="apiKey" className="text-sm font-medium mx-[5px]">
                   Replicate API Key
                 </Label>
               </div>
               <Input id="apiKey" type="password" value={apiKey} onChange={e => updateApiKey(e.target.value)} placeholder="Enter your API key" className="w-full transition-all focus:ring-2 focus:ring-primary/30" />
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm text-muted-foreground mt-1 mx-0">
                 Get your API key from{' '}
                 <a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:no-underline font-medium transition-all">
                   Replicate API Tokens
