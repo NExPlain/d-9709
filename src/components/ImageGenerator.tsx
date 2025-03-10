@@ -71,7 +71,7 @@ export const ImageGenerator = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Wand2 className="h-4 w-4 text-primary/80" />
-                <Label htmlFor="prompt" className="text-sm font-medium">
+                <Label htmlFor="prompt" className="text-sm font-medium bg-zinc-950">
                   What would you like to create?
                 </Label>
               </div>
