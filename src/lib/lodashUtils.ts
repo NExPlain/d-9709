@@ -45,10 +45,16 @@ export const groupByProperty = <T>(collection: T[], property: keyof T): _.Dictio
 };
 
 // Function utilities
-export const debounce = (func: Function, wait: number): Function => {
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T, 
+  wait: number
+): _.DebouncedFunc<T> => {
   return _.debounce(func, wait);
 };
 
-export const throttle = (func: Function, wait: number): Function => {
+export const throttle = <T extends (...args: any[]) => any>(
+  func: T, 
+  wait: number
+): _.DebouncedFunc<T> => {
   return _.throttle(func, wait);
 };
