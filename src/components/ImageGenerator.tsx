@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,8 @@ import { generateImage, checkGenerationStatus } from '@/lib/replicate';
 import { Loader2, Wand2, Key, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
+import { debounce } from '@/lib/lodashUtils';
+
 export const ImageGenerator = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -15,6 +18,12 @@ export const ImageGenerator = () => {
     apiKey,
     updateApiKey
   } = useApiKey();
+
+  // Use debounced function for API key updates to avoid unnecessary localStorage writes
+  const debouncedUpdateApiKey = debounce((value: string) => {
+    updateApiKey(value);
+  }, 300);
+
   const handleGenerate = async () => {
     if (!apiKey) {
       toast.error('Please enter your Replicate API key');
@@ -48,6 +57,7 @@ export const ImageGenerator = () => {
       toast.error('An error occurred while generating the image');
     }
   };
+
   return <div className="w-full max-w-3xl mx-auto space-y-8">
       <Card className="overflow-hidden border-2 bg-gradient-to-br from-card to-secondary/80 backdrop-blur-sm shadow-lg">
         <CardContent className="p-6 my-[5px]">
@@ -59,7 +69,14 @@ export const ImageGenerator = () => {
                   Replicate API Key
                 </Label>
               </div>
-              <Input id="apiKey" type="password" value={apiKey} onChange={e => updateApiKey(e.target.value)} placeholder="Enter your API key" className="w-full transition-all focus:ring-2 focus:ring-primary/30" />
+              <Input 
+                id="apiKey" 
+                type="password" 
+                value={apiKey} 
+                onChange={e => debouncedUpdateApiKey(e.target.value)} 
+                placeholder="Enter your API key" 
+                className="w-full transition-all focus:ring-2 focus:ring-primary/30" 
+              />
               <p className="text-sm text-muted-foreground mt-1 mx-0 text-zinc-100">
                 Get your API key from{' '}
                 <a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:no-underline font-medium transition-all">
